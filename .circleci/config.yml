@@ -16,7 +16,7 @@ commands:
 jobs:
   test_command:
     docker:
-      - image: circleci/node:13.8.01
+      - image: circleci/node:13.8.0
     steps: 
       - print_id
   
