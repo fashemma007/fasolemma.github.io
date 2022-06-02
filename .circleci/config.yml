@@ -1,9 +1,25 @@
 # Use the latest 2.1 version of CircleCI pipeline process engine.
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
+commands:
+  print_id:
+    description: "A command to print the pipeline id"
+    parameters:
+      to:
+        type: string
+        default: ${CIRCLE_WORKFLOW_ID}
+    steps: 
+      - run: echo << parameters.to >>
+    
 
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
+  test_command:
+    docker:
+      - image: circleci/node:13.8.01
+    steps: 
+      - print_id
+  
   print_hello:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
@@ -33,13 +49,13 @@ jobs:
       - checkout
       - run:
           name: "echo an env var that is part of our project"
-          command: |
-            echo $My_Name
+          command: echo $My_Name
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
   welcome:
     # Run the welcome/run job in its own container
     jobs:
+      - test_command
       - print_hello
       - print_world:
           requires: [print_hello]
